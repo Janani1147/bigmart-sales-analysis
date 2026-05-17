@@ -136,6 +136,97 @@ Tier 1, Tier 2, and Tier 3 cities produce similar average sales. The energy spen
 
 ---
 
+## Project 3 — Predictive Modeling Using Machine Learning
+
+### Objective
+Having cleaned the data in Project 1 and understood it in Project 2, the natural next step was to build models that could predict outlet sales for unseen products. This project applies three supervised learning algorithms to the same BigMart dataset, compares their performance, and identifies which features drive the most accurate predictions.
+
+### What is Supervised Learning
+Supervised learning means training a model on data where the answer is already known. In this case, the model learns from 6,818 rows where actual sales figures are available, then gets tested on 1,705 rows it has never seen. The goal is to predict OutletSales as accurately as possible using product and outlet attributes as inputs.
+
+### Data Preparation
+
+**Feature Selection**
+Nine columns were selected as inputs based on findings from the EDA in Project 2. Columns like ProductID and OutletID were excluded because they are identifiers with no predictive value. EstablishmentYear was dropped in favour of the OutletAge feature created in Project 1.
+
+```
+Input features  → MRP, OutletAge, ProductVisibility, Weight,
+                  FatContent, OutletSize, OutletType,
+                  LocationType, ProductType
+
+Target column   → OutletSales
+```
+
+**Encoding Categorical Columns**
+Machine learning algorithms cannot process text. All categorical columns were converted to numbers using Label Encoding before training began.
+
+**Train Test Split**
+The dataset was split into 80% training (6,818 rows) and 20% testing (1,705 rows). The model learns exclusively from the training set and is evaluated on the test set — rows it has never seen during training. This ensures the performance metrics reflect genuine predictive ability rather than memorisation.
+
+### Models Built
+
+**Linear Regression**
+The simplest model — fits a weighted formula across all input features to predict sales. It assumes a straight line relationship between inputs and output, which makes it fast but limited when real patterns are more complex.
+
+**Decision Tree**
+Instead of a formula, a Decision Tree asks a series of yes/no questions about the features. For example — is MRP above 150? Is OutletType equal to Type 3? Each path through the tree leads to a predicted sales value. A maximum depth of 6 was set to prevent the tree from becoming too complex and overfitting to the training data.
+
+**Random Forest**
+Builds 100 Decision Trees simultaneously, each trained on a random subset of rows and features. The final prediction is the average across all 100 trees. This approach corrects for the individual errors each tree might make — the collective vote is more reliable than any single tree alone.
+
+### Model Performance
+
+| Model | MAE | RMSE | R2 Score |
+|---|---|---|---|
+| Linear Regression | 856 | 1143 | 0.52 |
+| Decision Tree | 727 | 1046 | 0.60 |
+| Random Forest | 726 | 1037 | 0.60 |
+
+**MAE** — average prediction error in rupees. Lower is better.
+**RMSE** — similar to MAE but penalises large errors more heavily. Lower is better.
+**R2 Score** — proportion of sales variation the model explains. Higher is better.
+
+Random Forest is the best performing model across all three metrics, though the margin over Decision Tree is small. This pattern is common in retail datasets where a single well-tuned tree already captures most of the underlying structure.
+
+### A Note on Evaluation Visuals
+The project brief mentions confusion matrices and ROC curves. These apply exclusively to classification problems — tasks where the output is a category such as spam or not spam, churn or no churn. Since this project predicts a continuous number (OutletSales), the appropriate evaluation approach is MAE, RMSE, and R2, supplemented by the following two visualizations.
+
+**Actual vs Predicted Plot**
+Each dot represents one product from the test set. Its horizontal position shows the actual sales value and its vertical position shows what the model predicted. The diagonal reference line marks perfect prediction. Dots clustered close to this line indicate reliable predictions.
+
+**Residual Plot**
+A residual is the difference between actual and predicted sales. Plotting residuals against predicted values reveals whether errors are random or systematic. A mean residual of -₹28 against an average sales value of ₹2,181 confirms the model has virtually no directional bias — it does not consistently over or under predict.
+
+### Feature Importance
+
+Random Forest tracks which features it relied on most across all 100 trees to produce accurate predictions.
+
+```
+Most important  → MRP
+                  confirms the 0.57 correlation found in EDA
+                  price is the single strongest signal
+
+Second          → OutletType
+                  consistent with EDA finding that outlet
+                  format drives more variation than any
+                  other categorical feature
+
+Least important → OutletSize
+                  consistent with EDA — medium vs large
+                  distinction adds minimal predictive value
+```
+
+The feature importance ranking matches the EDA findings from Project 2 almost exactly, which validates the analytical work done before any modelling began.
+
+### Key Takeaways
+
+The models collectively explain 60% of sales variation. The remaining 40% is likely driven by factors not present in this dataset — promotional activity, seasonal demand, competitor proximity, and customer footfall data would all improve prediction accuracy if available.
+
+More importantly, the progression across three projects demonstrates a complete data science workflow. Raw messy data was cleaned, systematically explored to understand what matters, and finally used to build models that quantify those relationships. Each project informed the next — the cleaning made EDA possible, and the EDA made modelling more deliberate.
+
+
+
+
 ## Tools Used
 
 - **Python 3** — core programming language
