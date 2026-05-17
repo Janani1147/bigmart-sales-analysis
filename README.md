@@ -4,26 +4,6 @@ This repository documents my first two data science projects completed as part o
 
 ---
 
-## Repository Structure
-
-```
-bigmart-sales-analysis/
-│
-├── project1_cleaning/
-│   ├── bigmart_analysis.ipynb    # Data cleaning notebook
-│   └── bigmart_clean.csv         # Cleaned dataset output
-│
-├── project2_eda/
-│   └── bigmart_eda.ipynb         # Exploratory data analysis notebook
-│
-├── data/
-│   └── bigmart.csv               # Raw dataset
-│
-└── README.md
-```
-
----
-
 ## Project 1 — Data Cleaning & Visualization
 
 ### Objective
